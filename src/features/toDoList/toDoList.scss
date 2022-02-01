@@ -1,0 +1,88 @@
+.toDoList {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #f5eedc;
+    width: 80%;
+    padding: 50px 0;
+    margin-bottom: 200px;
+    border-radius: 10px;
+
+    button {
+        height: 60px;
+        width: 90px;
+        background: #d3eca7;
+        outline: none;
+        border: 2px solid #19282f;
+        margin-left: 10px;
+    }
+
+    input {
+        height: 60px;
+        padding: 0 5px 5px 15px;
+        border: 1px solid #a1b57d;
+        font-size: 18px;
+    }
+
+    textarea:focus,
+    input:focus {
+        outline: none;
+    }
+
+    &-inputContainer {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+
+    &-title {
+        color: #19282f;
+    }
+
+    &-emptyList {
+        color: #19282f;
+    }
+
+    &-content {
+        padding: 20px;
+        border: 1px solid #19282f;
+        border-radius: 10px;
+    }
+
+    &-listItem {
+        margin-bottom: 10px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        border-bottom: 1px solid #19282f;
+        padding: 10px;
+
+        &:last-of-type {
+            margin-bottom: 0;
+            border: none;
+        }
+
+        &-value {
+            margin-right: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #dd4a48;
+
+            &-isDone {
+                background-color: #a6cf98;
+                color: #f5eedc;
+            }
+        }
+
+        &-buttonsContainer {
+            margin-left: auto;
+
+            &-doneButton {
+                width: 140px !important;
+            }
+        }
+    }
+}
