@@ -1,24 +1,35 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import ClassNames from 'classnames';
+import { v1 } from 'uuid';
+import { useAppSelector, useAppDispatch } from '../../app/hooks';
+import { add, remove, changeListItemStatus } from './toDoListSlice';
 
 import './toDoList.scss';
 
-interface IListItem {
+export interface IListItem {
+    id: string;
     value: string;
     isDone: boolean;
 }
 
 export function ToDoList() {
-    const [toDoList, setToDoList] = useState([] as Array<IListItem>);
     const [newItem, setNewItem] = useState('');
-    const stringifyToDoList = JSON.stringify(toDoList)
+    const dispatch = useAppDispatch(); // direkt useAppDispatch içeride kullanılamıyor. neden?
+    const toDoList = useAppSelector(state => state.toDoList);
 
-    useEffect(() => {
-        console.log("use eeffect");
+    const addItem = () => {
+        dispatch(add({ id: v1(), value: newItem, isDone: false }));
 
-    }, [stringifyToDoList]);
+        setNewItem('');
+    };
 
-    console.log("render");
+    const removeItem = (listItem: IListItem) => {
+        dispatch(remove(listItem.id));
+    }
+
+    const changeStatus = (listItem: IListItem) => {
+        dispatch(changeListItemStatus({ id: listItem.id, value: listItem.value, isDone: !listItem.isDone }));
+    }
 
 
     return (
@@ -31,29 +42,24 @@ export function ToDoList() {
                     toDoList.length < 1 &&
                     <div className='toDoList-emptyList'>
                         NO LIST ITEMS :( <br />
-                        You can add some
+                        Add some
                     </div>
                 }
                 {
                     toDoList.length > 0 &&
-                    toDoList.map((listItem, index) =>
-                        <div className={ClassNames('toDoList-listItem')} key={Math.random()}>
+                    toDoList.map(listItem =>
+                        <div className={ClassNames('toDoList-listItem')} key={listItem.id}>
                             <span className={ClassNames('toDoList-listItem-value', { 'toDoList-listItem-value-isDone': listItem.isDone })}>{listItem.value}</span>
 
                             <div className='toDoList-listItem-buttonsContainer'>
                                 <button className='toDoList-listItem-buttonsContainer-doneButton' onClick={() => {
-                                    const itemToBeSet = index;
-
-                                    toDoList.splice(itemToBeSet, 1, { value: listItem.value, isDone: !listItem.isDone });
-
-                                    setToDoList([...toDoList]);
+                                    changeStatus(listItem);
                                 }}>
                                     Status: {listItem.isDone ? 'Done' : 'Undone'}
                                 </button>
 
                                 <button className='toDoList-listItem-buttonsContainer-deleteButton' onClick={() => {
-                                    const newList = toDoList.filter(item => item.value !== listItem.value);
-                                    setToDoList(newList);
+                                    removeItem(listItem);
                                 }}>Delete</button>
                             </div>
                         </div>
@@ -68,10 +74,7 @@ export function ToDoList() {
                             setNewItem(event.target.value);
                         }} />
 
-                        <button className='toDoList-saveButton' onClick={() => {
-                            setToDoList([...toDoList, { value: newItem, isDone: false }]);
-                            setNewItem('');
-                        }}>
+                        <button className='toDoList-saveButton' onClick={() => addItem()}>
                             Add
                         </button>
                     </div>
